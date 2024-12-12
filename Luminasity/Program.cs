@@ -34,7 +34,7 @@ class Program
 					break;
 				case "icons":
 					Console.WriteLine("Please be aware that icon extraction could take a while due to number of images");
-					Icons.ExtractIcons(1, 250000, lumina, fullMode);
+					Icons.ExtractIcons(1, 250000, lumina, fullMode, parallel);
 					break;
 				case "full":
 					fullMode = !fullMode;
