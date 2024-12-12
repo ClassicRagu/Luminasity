@@ -16,6 +16,7 @@ class Program
 
 		var lumina = new Lumina.GameData(xivPath, new() { DefaultExcelLanguage = Lumina.Data.Language.English });
 		bool fullMode = false;
+		bool parallel = false;
 
 		while (!endApp)
 		{
@@ -29,7 +30,7 @@ class Program
 					break;
 				case "maps":
 					Console.WriteLine("Please be aware that map extraction could take a while due to image processing");
-					Maps.ExtractMaps(lumina, fullMode);
+					Maps.ExtractMaps(lumina, fullMode, parallel);
 					break;
 				case "icons":
 					Console.WriteLine("Please be aware that icon extraction could take a while due to number of images");
@@ -38,6 +39,10 @@ class Program
 				case "full":
 					fullMode = !fullMode;
 					Console.WriteLine(fullMode ? "Full Export Mode Enabled" : "Full Export Mode Disabled");
+					break;
+				case "parallel":
+					parallel = !parallel;
+					Console.WriteLine(fullMode ? "Parallel Mode Enabled" : "Parallel Mode Disabled");
 					break;
 				default:
 					break;

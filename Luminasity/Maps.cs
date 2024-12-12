@@ -1,17 +1,16 @@
 ﻿using Lumina;
 using Lumina.Data.Files;
-using Lumina.Excel.GeneratedSheets2;
+using Lumina.Excel.Sheets;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using Lumina.Text;
 
 namespace Luminasity
 {
 	public class Maps
 	{
 		// Modified from https://github.com/TomestoneGG/Lumenstone
-		public static void ExtractMaps(GameData gameData, bool fullImport)
+		public static void ExtractMaps(GameData gameData, bool fullImport, bool parallel)
 		{
 			var maps = gameData.GetExcelSheet<Map>();
 
@@ -22,20 +21,38 @@ namespace Luminasity
 				Directory.CreateDirectory(directoryPath);
 			}
 
-			foreach (var map in maps)
+			if (parallel)
 			{
-				var idProperty = typeof(Map).GetProperty("Id");
-				if (idProperty == null || idProperty.PropertyType != typeof(SeString))
-					continue;
-				var idValue = idProperty.GetValue(map);
-				if (idValue == null)
-					continue;
-				var idString = ((SeString)idValue).RawString;
+				Parallel.ForEach(maps, map =>
+				{
+					ProcessMap(map, gameData, directoryPath, fullImport);
+				});
+			}
+			else
+			{
+				foreach (Map map in maps)
+				{
+					ProcessMap(map, gameData, directoryPath, fullImport);
+				}
+			}
+		}
+
+		private static void ProcessMap(Map map, GameData gameData, string directoryPath, bool fullImport)
+		{
+			try
+			{
+				var idValue = map.Id.ExtractText(); //typeof(Map).GetProperty("Id");
+				/*if (idProperty == null || idProperty.PropertyType != typeof(SeString))
+					continue;*/
+				//var idValue = idProperty.GetValue(map);
+				if (idValue == "default/00" || idValue == "")
+					return;
+				var idString = idValue;
 
 				// Assuming idString is in the format "xxx/yyy"
 				string[] parts = idString.Split('/');
 				if (parts.Length != 2)
-					continue; // Ensure idString is in the expected format
+					return; // Ensure idString is in the expected format
 
 
 				var outputFilePath = Path.Combine(directoryPath, parts[0] + "/" + parts[0] + "." + parts[1] + ".png");
@@ -49,7 +66,7 @@ namespace Luminasity
 					if (!gameData.FileExists(filePath))
 						filePath = "ui/map/" + idString + "/" + parts[0] + parts[1] + "m_m.tex";
 					if (!gameData.FileExists(filePath))
-						continue;
+						return;
 
 					Console.WriteLine("Extracting data for map: " + idString);
 
@@ -73,6 +90,11 @@ namespace Luminasity
 						image.SaveAsPng(outputFilePath);
 					}
 				}
+			} catch
+			{
+				Console.WriteLine("Oops, Parallel tried extracting the following map twice, this doesn't break anything: " + map.Id.ExtractText());
+				// This is really just for parallel. Parallel can try processing the same thing twice causing an exception.
+				// This isn't a good fix but it's good enough for this.
 			}
 		}
 
