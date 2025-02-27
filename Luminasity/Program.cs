@@ -32,6 +32,9 @@ class Program
 					Console.WriteLine("Please be aware that map extraction could take a while due to image processing");
 					Maps.ExtractMaps(lumina, fullMode, parallel);
 					break;
+				case "mogtomes":
+					MogTomes.ExtractMogTomes(lumina, fullMode, parallel);
+					break;
 				case "icons":
 					Console.WriteLine("Please be aware that icon extraction could take a while due to number of images");
 					Icons.ExtractIcons(1, 250000, lumina, fullMode, parallel);
