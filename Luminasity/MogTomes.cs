@@ -16,6 +16,7 @@ namespace Luminasity
             var csBonusSeason = gameData.GetExcelSheet<CSBonusSeason>();
             var contentFinderCondition = gameData.GetExcelSheet<ContentFinderCondition>();
             var items = gameData.GetExcelSheet<Item>();
+            var tripleTriadCardResidents = gameData.GetExcelSheet<TripleTriadCardResident>();
 
             string directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "mogtomes");
 
@@ -34,7 +35,7 @@ namespace Luminasity
                     Console.WriteLine("Standard/Weekly Objectives: ");
                     foreach (CSBonusMission mission in csBonusmissions[bonus.Category0])
                     {
-                        ProcessMogTome(mission.Content0.Value, contentFinderCondition, items);
+                        ProcessMogTome(mission.Content0.Value, contentFinderCondition, items, tripleTriadCardResidents);
                     }
 
                     Console.WriteLine("");
@@ -43,16 +44,16 @@ namespace Luminasity
                     {
                         Console.WriteLine("Week " + (mission.i + 1) + ":");
                         Console.Write("Option 1 - ");
-                        ProcessMogTome(mission.mission.Content0.Value, contentFinderCondition, items);
+                        ProcessMogTome(mission.mission.Content0.Value, contentFinderCondition, items, tripleTriadCardResidents);
                         Console.Write("Option 2 - ");
-                        ProcessMogTome(mission.mission.Content1.Value, contentFinderCondition, items);
+                        ProcessMogTome(mission.mission.Content1.Value, contentFinderCondition, items, tripleTriadCardResidents);
                         //ProcessMogTome(mission.Content0.Value, contentFinderCondition);
                     }
                 }
             }
         }
 
-        private static void ProcessMogTome(CSBonusContent content, ExcelSheet<ContentFinderCondition> contentFinderCondition, ExcelSheet<Item> items)
+        private static void ProcessMogTome(CSBonusContent content, ExcelSheet<ContentFinderCondition> contentFinderCondition, ExcelSheet<Item> items, ExcelSheet<TripleTriadCardResident> tripleTriadCardResidents)
         {
             switch (content.ContentType.Value.ContentType.Value.RowId)
             {
@@ -118,30 +119,32 @@ namespace Luminasity
                     Console.WriteLine("FATEs");
                     break;
                 case 36:
-                    Console.WriteLine("Island Sanctuary");
+                    Console.WriteLine("Gather materials " + content.Score1 + " times in Island Sanctuary");
                     break;
                 case 27:
-                    Console.WriteLine("Masked Carnivale");
+                    Console.WriteLine("Complete a stage of the Masked Carnivale");
                     break;
                 case 34:
                     var fishItem = content.Content0.Value.Content.GetValueOrDefault<FishParameter>()?.Item.RowId;
                     if(fishItem != null){
                         var fishName = items.GetRow(fishItem ?? 0);
-                        Console.Write("Catch Fish: " + fishName.Name);
+                        Console.Write("Catch " + fishName.Name);
                         Console.WriteLine();
                     }
                     break;
                 case 32:
-                    Console.WriteLine("Triple Triad");
+                    var ttNPC = content.Content0.Value.Content.GetValueOrDefault<ENpcResident>()?.Singular;
+                    var ttNPCLocal = tripleTriadCardResidents.First((x) => x.AcquisitionType == 6 && x.Acquisition.RowId == content.Content0.Value.Content.GetValueOrDefault<ENpcResident>()?.RowId);
+                    Console.WriteLine("Win a game of Triple Triad against " + ttNPC +  " in " + ttNPCLocal.Location.GetValueOrDefault<Level>().Value.Map.Value.PlaceName.Value.Name + ".");
                     break;
                 case 9:
-                    Console.WriteLine("Treasure Hunt");
+                    Console.WriteLine("Decipher a timeworn map and collect the treasure.");
                     break;
                 case 26:
-                    Console.WriteLine("Eureka");
+                    Console.WriteLine("Defeat " + content.Score1 + " notorious monster(s) in the Forbidden Land, Eureka");
                     break;
                 case 29:
-                    Console.WriteLine("Save the Queen");
+                    Console.WriteLine("Complete " + content.Score1 + " critical engagement(s) on the Bozjan southern front or in Zadnor");
                     break;
                 case 33:
                     Console.WriteLine("The Hunt");
