@@ -116,7 +116,9 @@ namespace Luminasity
                     }
                     break;
                 case 8:
-                    Console.WriteLine("FATEs");
+                    var territory1 = content.Content0.Value.Content.GetValueOrDefault<TerritoryType>()?.PlaceName.Value.Name;
+                    var territory2 = content.Content1.Value.Content.GetValueOrDefault<TerritoryType>()?.PlaceName.Value.Name;
+                    Console.WriteLine("Complete " + content.Score1 + " FATEs in " + territory1 + " or " + territory2 + ".");
                     break;
                 case 36:
                     Console.WriteLine("Gather materials " + content.Score1 + " times in Island Sanctuary");
@@ -147,7 +149,8 @@ namespace Luminasity
                     Console.WriteLine("Complete " + content.Score1 + " critical engagement(s) on the Bozjan southern front or in Zadnor");
                     break;
                 case 33:
-                    Console.WriteLine("The Hunt");
+                    var huntName = content.Content0.Value.Content.GetValueOrDefault<MobHuntOrderType>()?.EventItem.Value.Name;
+                    Console.WriteLine("Complete an " + huntName + ".");
                     break;
                 default:
                     break;
