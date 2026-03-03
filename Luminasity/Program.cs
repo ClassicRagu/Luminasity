@@ -45,7 +45,7 @@ class Program
 					break;
 				case "parallel":
 					parallel = !parallel;
-					Console.WriteLine(fullMode ? "Parallel Mode Enabled" : "Parallel Mode Disabled");
+					Console.WriteLine(parallel ? "Parallel Mode Enabled" : "Parallel Mode Disabled");
 					break;
 				default:
 					break;
