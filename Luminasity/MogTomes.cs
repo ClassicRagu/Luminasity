@@ -140,11 +140,14 @@ namespace Luminasity
                     break;
                 case 7:
                     var ttNPC = content.Content0.Value.Content.GetValueOrDefault<ENpcResident>()?.Singular;
-                    var ttNPCLocal = tripleTriadCardResidents.First((x) => x.AcquisitionType == 6 && x.Acquisition.RowId == content.Content0.Value.Content.GetValueOrDefault<ENpcResident>()?.RowId);
+                    var ttNPCLocal = tripleTriadCardResidents.First((x) => x.AcquisitionType.RowId == 6 && x.Acquisition.RowId == content.Content0.Value.Content.GetValueOrDefault<ENpcResident>()?.RowId);
                     Console.WriteLine("Win a game of Triple Triad against " + ttNPC +  " in " + ttNPCLocal.Location.GetValueOrDefault<Level>().Value.Map.Value.PlaceName.Value.Name + ".");
                     break;
                 case 8:
                     Console.WriteLine("Decipher a timeworn map and collect the treasure.");
+                    break;
+                case 5:
+                    Console.WriteLine("Unknown - Deep Dungeon.");
                     break;
                 case 15:
                     Console.WriteLine("Defeat " + content.Score1 + " notorious monster(s) in the Forbidden Land, Eureka");
@@ -155,6 +158,24 @@ namespace Luminasity
                 case 9:
                     var huntName = content.Content0.Value.Content.GetValueOrDefault<MobHuntOrderType>()?.EventItem.Value.Name;
                     Console.WriteLine("Complete an " + huntName + ".");
+                    break;
+                case 14: 
+                    Console.WriteLine("Enter a treasure dungeon via a teleportation portal " + content.Score1 + "  times.※Treasure hunts abandoned midway through will not count toward the total.");
+                    break;
+                case 20:
+                    Console.WriteLine("Complete any custom delivery " + content.Score1 + " times.");
+                    break;
+                case 24:
+                    Console.WriteLine("Collect " + content.Score1 + " seals for Wondrous Tails.");
+                    break;
+                case 25:
+                    Console.WriteLine("Play " + content.Score1 + " match of Doman mahjong with other players.※NPC matches will not be counted.");
+                    break;
+                case 26:
+                    Console.WriteLine("Complete " + content.Score1 + " Grand Company supply and provisioning missions.");
+                    break;
+                case 27:
+                    Console.WriteLine("Complete " + content.Score1 + " critical encounters on the Occult Crescent: South Horn.");
                     break;
                 default:
                     Console.WriteLine("Unknown");
